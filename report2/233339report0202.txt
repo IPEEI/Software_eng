@@ -1,0 +1,82 @@
+/*
+ * 科目：ソフトウェア演習Ia
+ * 学籍番号・氏名：B233339・多賀一平
+ * 課題番号：課題2-2
+ * 提出日：2023/4/30
+ * 使用Ｃコンパイラ：gcc version 10.3.0-2
+ */
+
+#include <stdio.h>
+#include <stdbool.h>
+#define LIMIT_COLUMN 100 //多くてもこの列数に収まるという値
+#define LIMIT_WORD 45 //最長の英単語の文字数
+
+int search(char *s);
+bool check(char *s1, char *s2);
+
+int main(void)
+{
+    FILE *fp;
+    fp = fopen("Alice_in_Wonderland.txt", "r"); /* ファイルのオープン */
+
+    if (fp == NULL) {
+        printf("¥Cannot open the file.\n");
+    } else {
+        int result[3]={0}; //各ワードの個数
+        while(1){
+            char buf[LIMIT_COLUMN]={0}; //一時的に文字列を保存しておく配列
+            if(fgets(buf,LIMIT_COLUMN,fp)==NULL)break;
+            //取得行の1文字目から順に最後尾の文字まで1つずつ処理
+            for(int i=0;i<LIMIT_COLUMN&&buf[i]!='\n';++i){
+                //wordは対象の文字から空白または改行までの文字列
+                char word[LIMIT_WORD]={0};
+                for(int j=i;buf[j]!=' '&&buf[j]!='\n';++j){
+                    word[j-i]=buf[j];
+                }
+                //wordにカウントしたい文字列が含まれていたらカウント
+                int match_word=search(word);
+                if(match_word!=3){
+                    result[match_word]++;
+                }
+            }
+        }
+        printf("Alice:%d\n",result[0]);
+        printf("wonder:%d\n",result[1]);
+        printf("self:%d\n",result[2]);
+        fclose(fp); /* ファイルのクローズ */
+    }
+    return 0;
+}
+
+//カウントしたい文字列が含まれていたらそれに対応する数字を返す
+int search(char *input){
+    char target[3][LIMIT_WORD]={"Alice","wonder","self"};
+    for(int i=0;i<3;++i){
+        if(check(input,target[i])){
+            return i;
+        }
+    }
+    //該当する文字列がなかった場合3を返す
+    return 3;
+}
+
+//ターゲットの文字列と、入力された文字列の先頭部分が一致しているか
+bool check(char *word, char *target){
+    int i;
+    //先頭から一致している間ループ
+    for(i = 0;*(word + i) == *(target + i);i++){
+        //ここでtrueが返されるのは文字列が一致しているとき
+        if(*(target + i +1) == '\0')return true;
+    }
+    return false;
+} 
+
+/*
+実行結果：
+gcc 233339report0202.c -Wall -o 233339report0202
+233339report0202
+
+Alice:395
+wonder:28
+self:120
+*/
