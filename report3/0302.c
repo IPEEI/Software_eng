@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-// Define function pointer type
-typedef double (*func_ptr)(double x);
-
 // target function 1
 double f1(double x)
 {
@@ -30,7 +27,7 @@ double trapezoid(double w1, double w2, double h)
 }
 
 // general integral function by calculating and summing up the area of micro-trapezoid
-double integral(double x1, double x2, int n, func_ptr f)
+double integral(double x1, double x2, int n, double (*f)(double))
 {
   double area = 0.0;
   double dx = (x2 - x1) / n;
@@ -46,7 +43,7 @@ double integral(double x1, double x2, int n, func_ptr f)
 
 int main()
 {
-  func_ptr funcs[] = { f1, f2, f3 };
+  double (*funcs[])(double) = { f1, f2, f3 };
   double val[3][2] = { {1.0, 10.0}, {1.0, 10.0}, {M_PI / 3.0, M_PI} };
 
   for (int i = 0; i < 3; i++) {
