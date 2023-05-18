@@ -47,7 +47,6 @@ void insert_word(char *word) {
     int index = hash(word);
     LISTP list = htable[index];
     LISTP temp = list;
-    //一致している単語があればカウント
     while(temp) {
         if(strcmp(temp->word, word) == 0) {
             temp->count++;
@@ -60,7 +59,7 @@ void insert_word(char *word) {
 
 void printTable()
 {
-    int c=1;//通し番号
+    int c=1;
     for(int i = 0; i < HASHSIZE; i++) {
         LISTP temp = htable[i];
         while(temp != NULL) {
@@ -70,7 +69,6 @@ void printTable()
     }
 }
 
-//メモリ開放
 void deleteMemory( LISTP p )
 {
     if ( p != NULL ) {
